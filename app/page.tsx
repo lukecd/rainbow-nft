@@ -4,6 +4,11 @@ export default function Home() {
 	return (
 		<div className="bg-black min-h-screen flex items-center justify-center px-4 ">
 			<div className="flex flex-col p-2 rounded-2xl">
+				<div className="flex flex-col items-center justify-center">
+					<div className="bg-blue-700 text-white p-2 rounded-2xl mb-4 mt-5 text-center w-5/6">
+						Rainbow NFT
+					</div>
+				</div>
 				<div className="flex flex-row w-5/6 h-view gap-2 mx-auto">
 					<div className="flex-1">
 						<ConfigureNFT />

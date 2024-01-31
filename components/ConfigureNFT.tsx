@@ -26,7 +26,7 @@ const ConfigureNFT = () => {
 			attributes: [{ trait_type: "Color", value: color }],
 		}));
 	}, [color]);
-
+	//@ts-ignore
 	const handleChangeComplete = (color) => {
 		setColor(color.hex);
 	};
@@ -68,7 +68,9 @@ const ConfigureNFT = () => {
 		canvas.width = 800;
 		canvas.height = 800;
 		const ctx = canvas.getContext("2d");
+		//@ts-ignore
 		ctx.fillStyle = color;
+		//@ts-ignore
 		ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 		// Convert canvas to Blob
