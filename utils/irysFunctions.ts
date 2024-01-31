@@ -1,5 +1,3 @@
-import { CATEGORIES } from "@/components/category-context";
-import type { ConnectedWallet } from "@privy-io/react-auth";
 import Query from "@irys/query";
 import { WebIrys } from "@irys/sdk";
 import { ethers } from "ethers";
