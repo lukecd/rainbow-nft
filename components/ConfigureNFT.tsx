@@ -7,9 +7,12 @@ import { CirclePicker } from "react-color";
 import { ethers } from "ethers";
 import JSONViewer from "./JSONViewer";
 import { uploadImage, uploadJSON } from "../utils/irysFunctions";
+import Spinner from "./Spinner";
 
 const ConfigureNFT = () => {
 	const [color, setColor] = useState("#e91e63");
+	const [actionActive, setActionActive] = useState<boolean>(false);
+
 	const [walletAddress, setWalletAddress] = useState("");
 	const [nftMetadata, setNftMetadata] = useState({
 		name: "Rainbow NFT",
@@ -41,6 +44,7 @@ const ConfigureNFT = () => {
 	}, []);
 
 	const connectWallet = async () => {
+		setActionActive(true);
 		let signer = null;
 
 		let provider;
@@ -56,13 +60,16 @@ const ConfigureNFT = () => {
 			//@ts-ignore
 			setWalletAddress(window.ethereum.selectedAddress);
 		}
+		setActionActive(false);
 	};
 
 	const disconnectWallet = () => {
 		setWalletAddress("");
 	};
 
-	const saveState = () => {
+	const saveState = async () => {
+		setActionActive(true);
+		console.log("set action active to true");
 		// Generate and download the PNG file
 		const canvas = document.createElement("canvas");
 		canvas.width = 800;
@@ -88,18 +95,39 @@ const ConfigureNFT = () => {
 
 					// Convert updated metadata to JSON string and upload
 					const metadataJSON = JSON.stringify(updatedMetadata);
-					await uploadJSON(metadataJSON, "nOudf_UfTHj9ZqZ-Mma_B_gziV65kHaULFlqCWitwUI");
+					setActionActive(true);
+
+					const response = await fetch("/api/uploadJSON", {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({ newJSON: metadataJSON }),
+					});
+					setActionActive(false);
+
+					console.log("storeMetadata response=", response);
 				} catch (e) {
 					console.error("Error in uploading image", e);
 				}
 			}
-		}, "image/jpeg");
+		}, "image/png");
 	};
 
 	return (
-		<div className="bg-white rounded-2xl shadow-lg p-4 flex flex-col items-center justify-between w-full h-full">
+		<div className="bg-[#e5e4f9] rounded-2xl shadow-lg p-4 flex flex-col items-center justify-between w-[500px]">
 			<div className="py-1 max-w-200">
 				<JSONViewer data={nftMetadata} />
+			</div>
+			<div className=" text-black p-2 rounded-2xl text-sm">
+				Metadata:{" "}
+				<a
+					href="https://gateway.irys.xyz/mutable/nOudf_UfTHj9ZqZ-Mma_B_gziV65kHaULFlqCWitwUI"
+					target="_blank"
+					className="underline text-black hover:text-blue-300"
+				>
+					https://gateway.irys.xyz/mutable/ {process.env.NEXT_PUBLIC_ROOT_TX}
+				</a>
 			</div>
 
 			<div className="flex flex-col w-full mt-4">
@@ -121,7 +149,15 @@ const ConfigureNFT = () => {
 					}`}
 					onClick={walletAddress ? saveState : connectWallet}
 				>
-					{walletAddress ? "Save State" : "Connect Wallet"}
+					{actionActive ? (
+						<div className="flex flex-row items-center justify-center">
+							<Spinner />
+						</div>
+					) : walletAddress ? (
+						"Save State"
+					) : (
+						"Connect Wallet"
+					)}
 				</button>
 			</div>
 		</div>
