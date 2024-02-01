@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import Spinner from "./Spinner";
-import RainbowABI from "../smart-contract/RainbowABI.json";
 
 const ShowNFT = () => {
 	const metadataURL = `https://gateway.irys.xyz/mutable/${process.env.NEXT_PUBLIC_ROOT_TX}`;
